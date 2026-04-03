@@ -35,6 +35,6 @@ export async function sendEmail({ to, subject, html, text }) {
         to, subject, html, text
     }
     const details = await transporter.sendMail(mailOPtions)
-
+    return `Email sent to ${to} with subject "${subject}". `
 
 }

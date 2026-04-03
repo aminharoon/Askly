@@ -8,9 +8,11 @@ app.use(cookieParser())
 
 /**import routes */
 import AuthRoutes from './routes/auth.routes.js'
+import chatRoutes from './routes/chat.routes.js'
 
 
 app.use("/api/auth", AuthRoutes)
+app.use("/api/chats", chatRoutes)
 
 
 app.use(handleError)
