@@ -5,9 +5,6 @@ import { useAuth } from "../features/auth/hook/useauth";
 import { useSelector } from "react-redux";
 
 const App = () => {
-  const { user, loading } = useSelector((state) => state.auth);
-  console.log("user is : ", user);
-
   const auth = useAuth();
 
   useEffect(() => {

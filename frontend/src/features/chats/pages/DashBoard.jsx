@@ -1,14 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { useAuth } from "../../auth/hook/useauth";
 import { useNavigate } from "react-router";
 import { useSelector } from "react-redux";
+import { useChat } from "../hook/useChat.js";
 
 const DashBoard = ({ children }) => {
   const navigate = useNavigate();
   const auth = useAuth();
   const { user, loading } = useSelector((state) => state.auth);
+  const chat = useChat();
 
+  useEffect(() => {
+    chat.initializeSocketConnection();
+  }, []);
   const Logout = async () => {
     await auth.handleLogout();
     navigate("/login");

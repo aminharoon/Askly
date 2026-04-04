@@ -26,8 +26,8 @@ export const useAuth = () => {
             dispatch(setLoading(true))
 
             const data = await login(({ email, password }))
-
             dispatch(setUser(data))
+            return true
 
         } catch (e) {
             dispatch(setError(`login failed ${e.message}`))

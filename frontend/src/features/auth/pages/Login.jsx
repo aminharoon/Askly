@@ -29,11 +29,11 @@ const Login = () => {
       email,
       password,
     };
-    await handleLogin(payLaod);
-    if (!user) {
+    const res = await handleLogin(payLaod);
+    if (!res) {
       navigate("/login");
     } else {
-      navigate("/");
+      navigate("/dashboard");
     }
   };
 
