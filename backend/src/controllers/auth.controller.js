@@ -145,6 +145,7 @@ const login = async (req, res) => {
         throw new ApiError(400, "please verify your email before login")
     }
     else {
+        const user = await userModel.findOne({ email }).select("-password -refreshToken -emailToken")
         const { AccessToken, RefreshToken } = await generateAccessRefreshToken(isUser)
         const options = {
             httpOnly: true,
@@ -154,7 +155,7 @@ const login = async (req, res) => {
             .status(200)
             .cookie("refreshToken", RefreshToken, options)
             .cookie("AccessToken", AccessToken, options)
-            .json(new ApiResponse(200, "login successful", isUser))
+            .json(new ApiResponse(200, "login successful", user))
     }
 
 }

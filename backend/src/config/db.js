@@ -9,4 +9,4 @@ export const connectDB = async () => {
     } catch (e) {
         console.log("something went wrong while connecting with the data base ", e.message)
     }
-}
+}  
