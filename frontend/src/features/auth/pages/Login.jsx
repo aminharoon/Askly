@@ -30,7 +30,11 @@ const Login = () => {
       password,
     };
     await handleLogin(payLaod);
-    navigate("/");
+    if (!user) {
+      navigate("/login");
+    } else {
+      navigate("/");
+    }
   };
 
   return (

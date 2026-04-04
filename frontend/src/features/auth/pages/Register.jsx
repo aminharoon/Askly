@@ -1,25 +1,17 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
-
+import { useAuth } from "../hook/useauth";
 const Register = () => {
+  const { handleRegister, loading } = useAuth();
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
-  });
-  const [loading, setLoading] = useState(false);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    await handleRegister({ username, email, password });
+    navigate("/login");
   };
 
   return (
@@ -52,8 +44,8 @@ const Register = () => {
                 type="text"
                 id="username"
                 name="username"
-                value={formData.username}
-                onChange={handleChange}
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 required
                 className="w-full px-4 py-2 rounded-lg text-white focus:outline-none focus:ring-2 transition"
                 style={{
@@ -77,8 +69,8 @@ const Register = () => {
                 type="email"
                 id="email"
                 name="email"
-                value={formData.email}
-                onChange={handleChange}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
                 className="w-full px-4 py-2 rounded-lg text-white focus:outline-none focus:ring-2 transition"
                 style={{
@@ -102,8 +94,8 @@ const Register = () => {
                 type="password"
                 id="password"
                 name="password"
-                value={formData.password}
-                onChange={handleChange}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 required
                 className="w-full px-4 py-2 rounded-lg text-white focus:outline-none focus:ring-2 transition"
                 style={{
@@ -119,9 +111,12 @@ const Register = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2 px-4 text-white font-semibold rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed mt-6"
+              className="w-full py-2 px-4 bg-accent text-black font-semibold rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed mt-6 flex items-center justify-center gap-2"
               style={{ backgroundColor: "#3b82f6" }}
             >
+              {loading && (
+                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+              )}
               {loading ? "Registering..." : "Register"}
             </button>
           </form>

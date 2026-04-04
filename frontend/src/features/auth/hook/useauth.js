@@ -13,6 +13,7 @@ export const useAuth = () => {
 
             const data = await register(({ username, email, password }))
 
+
         } catch (e) {
             dispatch(setError(`Registration failed ${e.message}`))
         }
