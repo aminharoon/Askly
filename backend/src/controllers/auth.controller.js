@@ -163,7 +163,7 @@ const login = async (req, res) => {
 const getMe = async (req, res) => {
     const userID = req.user._id
 
-    const user = await userModel.findById(userID).select("-password")
+    const user = await userModel.findById(userID).select("-password -refreshToken -emailToken")
 
     if (!user) {
         throw new ApiError(404, "user not found ")
@@ -180,6 +180,10 @@ const logout = async (req, res) => {
     const user = await userModel.findByIdAndUpdate(req.user._id, {
         $unset: { refreshToken: 1 }
     })
+    if (!user) {
+        throw new ApiError("User is Already Logout ")
+    }
+
     const options = {
         httpOnly: true,
         secure: true

@@ -7,7 +7,7 @@ export const authUser = async (req, res, next) => {
     const { AccessToken } = req.cookies
 
     if (!AccessToken) {
-        throw new ApiError(401, "Unauthorized")
+        throw new ApiError(401, "Unauthorized access. Please log in to continue.")
     }
 
     try {

@@ -34,7 +34,7 @@ AuthRoutes.post("/login", validateLogin, authController.login)
  * @access Private
  */
 
-AuthRoutes.get("/get-me", authUser, authController.getMe)
+AuthRoutes.get("/getMe", authUser, authController.getMe)
 
 /**
  * @route GET /api/auth/logout

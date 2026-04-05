@@ -5,6 +5,9 @@ import { chatController } from '../controllers/chat.controller.js'
 const chatRoutes = Router()
 
 chatRoutes.post("/message", authUser, chatController.sendMessage)
+chatRoutes.get("/", authUser, chatController.getAllChats)
+chatRoutes.get("/messages/:chatID", authUser, chatController.getChatMessages)
+chatRoutes.get("/delete/:chatID", authUser, chatController.deleteChat)
 
 
 export default chatRoutes
