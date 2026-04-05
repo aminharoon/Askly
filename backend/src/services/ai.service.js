@@ -1,6 +1,6 @@
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { ChatMistralAI } from "@langchain/mistralai";
-import { HumanMessage, SystemMessage, tool, createAgent } from 'langchain'
+import { HumanMessage, SystemMessage, tool, createAgent, AIMessage } from 'langchain'
 import { sendEmail } from "./mail.service.js";
 import * as z from 'zod'
 import ApiError from '../utils/ApiError.js'
@@ -34,17 +34,15 @@ const agent = createAgent({
     model: geminiModel,
     tools: [emailTool]
 })
-export const generateResponse = async (message) => {
-    /**
-     * for agent 
-     *  const response = await agent.invoke({
-        messages: [new HumanMessage(message)]
-    })
+export const generateResponse = async (messages) => {
 
-    return response.messages[response.messages.length - 1].content
-     */
 
-    const response = await geminiModel.invoke([new HumanMessage(message)])
+    const response = await geminiModel.invoke(messages.map(msg => {
+        if (msg.role == "user") { return new HumanMessage(msg.content) }
+        else if (msg.role == "ai") {
+            return new AIMessage(msg.content)
+        }
+    }))
 
     return response.content
 

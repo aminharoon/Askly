@@ -5,22 +5,38 @@ import chatModel from "../models/chat.model.js"
 import messageModel from '../models/message.model.js'
 
 const sendMessage = async (req, res) => {
-    const { message } = req.body
+    const { message, chat: chatID } = req.body
 
-    const title = await generateChatTittle(message)
-    const result = await generateResponse(message)
+    let tittle = null, chat = null
 
-    const chat = await chatModel.create({
-        user: req.user._id,
-        tittle: title
+    if (!chatID) {
+        tittle = await generateChatTittle(message)
+        chat = await chatModel.create({
+            user: req.user._id,
+            tittle
+        })
+
+    }
+    const userMessage = await messageModel.create({
+        chat: chatID || chat._id,
+        content: message,
+        role: "user"
+
     })
-    const messages = await messageModel.create({
-        chat: chat._id,
+    const allMessages = await messageModel.find({ chat: chatID || chat._id })
+
+
+    const result = await generateResponse(allMessages)
+    const aiResponse = await messageModel.create({
+        chat: chatID || chat._id,
         content: result,
         role: "ai"
     })
 
-    res.status(201).json(new ApiResponse(201, { chat, response: messages }))
+
+
+
+    res.status(201).json(new ApiResponse(201, { chat: userMessage, response: aiResponse }))
 
 }
 

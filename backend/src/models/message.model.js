@@ -13,11 +13,11 @@ const messageSchema = new Schema({
     },
     role: {
         type: String,
-        enum: ['user', 'ai'],
+        enum: ["user", "ai"],
         required: true,
     },
 
 }, { timestamps: true })
 
-const chatModel = mongoose.model("messages", messageSchema)
-export default chatModel
+const messageModel = mongoose.model("messages", messageSchema)
+export default messageModel
