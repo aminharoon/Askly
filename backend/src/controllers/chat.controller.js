@@ -7,11 +7,10 @@ const sendMessage = async (req, res) => {
     const title = await generateChatTittle(message)
     const result = await generateResponse(message)
 
-    res.status(200).json(new ApiResponse(200, { title, result: "" }))
+    res.status(200).json(new ApiResponse(200, { title, result: result }))
 
 }
 
 export const chatController = {
     sendMessage
-
 }
