@@ -133,6 +133,7 @@ const resend_email = async (req, res) => {
 const login = async (req, res) => {
     const { email, password } = req.body
     const isUser = await userModel.findOne({ email })
+
     if (!isUser) {
         throw new ApiError(404, "user not found ")
     }
@@ -196,11 +197,51 @@ const logout = async (req, res) => {
 
 }
 
+// Request → Verify user → Check old password → Set new password → Save → Done
+const updatePassword = async (req, res) => {
+    const { oldPassword, newPassword } = req.body
+    const user = await userModel.findById(req.user._id)
+
+    if (!user) {
+        throw new ApiError(404, "user not found ")
+    }
+    if (oldPassword === newPassword) {
+        throw new ApiError(400, "new password cannot be same as old password ")
+    }
+    const isPasswordValid = await user.comparePassword(oldPassword)
+
+    if (!isPasswordValid) {
+        throw new ApiError(401, "invalid password ")
+    }
+
+    user.password = newPassword
+    user.save()
+
+    const html = `<h1>PASSWORD UPDATED! </h1>
+    <p>Dear ${user.username},</p>
+    <p>Your password has been updated successfully .If you did not perform this action please contact support immediately . </p>
+    <a href="http://localhost:3000/api/auth/login"> login </a>  
+    `
+    await sendEmail({
+        to: user.email,
+        subject: "PASSWORD UPDATED! 🚀",
+        html: html
+    })
+
+
+    res.status(200).json(new ApiResponse(200, "Password updated successfully"))
+
+
+
+
+}
+
 export const authController = {
     registerUser,
     verify_email,
     resend_email,
     login,
     getMe,
-    logout
+    logout,
+    updatePassword
 }

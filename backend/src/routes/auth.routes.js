@@ -51,4 +51,6 @@ AuthRoutes.get("/logout", authUser, authController.logout)
  * @access Public
  */
 AuthRoutes.post("/resend-email", authController.resend_email)
+
+AuthRoutes.post("/updatePassword", authUser, authController.updatePassword)
 export default AuthRoutes
