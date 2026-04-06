@@ -197,7 +197,7 @@ const logout = async (req, res) => {
 
 }
 
-// Request → Verify user → Check old password → Set new password → Save → Done
+
 const updatePassword = async (req, res) => {
     const { oldPassword, newPassword } = req.body
     const user = await userModel.findById(req.user._id)
