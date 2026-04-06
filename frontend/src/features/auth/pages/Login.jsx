@@ -95,7 +95,7 @@ const Login = () => {
                 value={password}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2 rounded-lg text-white focus:outline-none focus:ring-2 transition"
+                className="w-full px-4 py-2 rounded-lg text-white focus:outline-none focus:ring-2 transition "
                 style={{
                   backgroundColor: "#2a2a2a",
                   borderColor: "#404040",

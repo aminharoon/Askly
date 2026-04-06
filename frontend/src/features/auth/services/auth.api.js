@@ -36,7 +36,7 @@ export const login = async ({ email, password }) => {
 }
 export const getMe = async () => {
     try {
-        const res = await fetch(`${baseURI}/get-me`, {
+        const res = await fetch(`${baseURI}/getMe`, {
             method: "GET",
             credentials: "include"
         })
