@@ -8,13 +8,15 @@ import ApiError from "../utils/ApiError.js"
 const sendMessage = async (req, res) => {
     const { message, chat: chatID } = req.body
 
-    let tittle = null, chat = null
+
+
+    let title = null, chat = null
 
     if (!chatID) {
-        tittle = await generateChatTittle(message)
+        title = await generateChatTittle(message)
         chat = await chatModel.create({
             user: req.user._id,
-            tittle
+            title
         })
 
     }
@@ -37,7 +39,9 @@ const sendMessage = async (req, res) => {
 
 
 
-    res.status(201).json(new ApiResponse(201, { chat: userMessage, response: aiResponse }))
+    res.status(201).json(
+        new ApiResponse(201, "success", { chat: userMessage, response: aiResponse })
+    )
 
 }
 
@@ -47,7 +51,7 @@ const getAllChats = async (req, res) => {
         { user: req.user._id }
     )
 
-    res.status(200).json(new ApiResponse(200, chats))
+    res.status(200).json(new ApiResponse(200, "success", { chats }))
 
 }
 
@@ -65,7 +69,7 @@ const getChatMessages = async (req, res) => {
     }
     const messages = await messageModel.find({ chat: chatID })
 
-    res.status(200).json(new ApiResponse(200, messages))
+    res.status(200).json(new ApiResponse(200, "success", { messages }))
 }
 
 const deleteChat = async (req, res) => {
