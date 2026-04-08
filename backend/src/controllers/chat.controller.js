@@ -16,7 +16,7 @@ const sendMessage = async (req, res) => {
         title = await generateChatTittle(message)
         chat = await chatModel.create({
             user: req.user._id,
-            title
+            tittle: title
         })
 
     }

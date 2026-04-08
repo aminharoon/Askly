@@ -18,7 +18,7 @@ export const useChat = () => {
 
             const data = await sendMessage({ message, chatId })
             const { chat, response } = data
-            console.log(chat, response)
+            console.log(chat)
             dispatch(createNewChat({
                 chatId: chat._id,
                 title: chat.title

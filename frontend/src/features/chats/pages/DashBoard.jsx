@@ -2,6 +2,8 @@ import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { useChat } from "../hook/useChat";
 
 const DashBoard = () => {
@@ -9,8 +11,6 @@ const DashBoard = () => {
 
   const { chats, currentChatId } = useSelector((state) => state.chat);
   // const { currentChatId } = useSelector((state) => state.chat);
-
-  const currentMessages = {};
 
   const chat = useChat();
 
@@ -41,11 +41,11 @@ const DashBoard = () => {
         <section className="relative flex h-full w-[80%] flex-col gap-4 px-6">
           {/* Messages */}
           <div className="no-scrollbar flex-1 overflow-y-auto pb-28 flex flex-col gap-3">
-            <div className="w-full flex">
+            {/* <div className="w-full flex">
               <div className="ml-auto max-w-[70%] rounded-2xl rounded-br-none bg-[#2a2a2a] px-4 py-3 text-white break-words whitespace-pre-wrap"></div>
 
               <div className="mr-auto max-w-[80%] rounded-2xl bg-[#1f1f1f] px-4 py-3 text-white/70 break-words whitespace-pre-wrap leading-relaxed"></div>
-            </div>
+            </div> */}
 
             {chats[currentChatId]?.message.map((msg) => (
               <div key={msg._id} className="w-full flex">
@@ -54,8 +54,10 @@ const DashBoard = () => {
                     {msg.content}
                   </div>
                 ) : (
-                  <div className="mr-auto max-w-[80%] rounded-2xl bg-[#1f1f1f] px-4 py-3 text-white/70 break-words whitespace-pre-wrap leading-relaxed">
-                    {msg.content}
+                  <div className="mr-auto max-w-[80%] rounded-2xl bg-[#1f1f1f] px-4 py-3 text-white/70 break-words leading-relaxed">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                      {msg.content}
+                    </ReactMarkdown>
                   </div>
                 )}
               </div>
