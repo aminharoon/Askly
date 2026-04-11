@@ -8,39 +8,42 @@ import ApiError from "../utils/ApiError.js"
 const sendMessage = async (req, res) => {
     const { message, chat: chatID } = req.body
 
-
-
-    let title = null, chat = null
+    let chat = null
 
     if (!chatID) {
-        title = await generateChatTittle(message)
+        const title = await generateChatTittle(message)
         chat = await chatModel.create({
             user: req.user._id,
             tittle: title
         })
+    } else {
+        chat = await chatModel.findOne({
+            _id: chatID,
+            user: req.user._id
+        })
 
+        if (!chat) {
+            throw new ApiError(404, "chat not found")
+        }
     }
+
     const userMessage = await messageModel.create({
-        chat: chatID || chat._id,
+        chat: chat._id,
         content: message,
         role: "user"
 
     })
-    const allMessages = await messageModel.find({ chat: chatID || chat._id })
-
+    const allMessages = await messageModel.find({ chat: chat._id })
 
     const result = await generateResponse(allMessages)
     const aiResponse = await messageModel.create({
-        chat: chatID || chat._id,
+        chat: chat._id,
         content: result,
         role: "ai"
     })
 
-
-
-
     res.status(201).json(
-        new ApiResponse(201, "success", { chat: userMessage, response: aiResponse })
+        new ApiResponse(201, "success", { chat, userMessage, response: aiResponse })
     )
 
 }

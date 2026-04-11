@@ -1,12 +1,12 @@
 const baseURI = `http://localhost:3000/api/chats`
 
-export const sendMessage = async ({ message, chatID }) => {
+export const sendMessage = async ({ message, chatId }) => {
     try {
         const res = await fetch(`${baseURI}/message`, {
             method: "POST",
             credentials: "include",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message, chat: chatID })
+            body: JSON.stringify({ message, chat: chatId })
 
         })
         if (!res.ok) {
@@ -24,7 +24,7 @@ export const sendMessage = async ({ message, chatID }) => {
 
 }
 
-export const getChats = async (req, res) => {
+export const getChats = async () => {
     try {
         const res = await fetch(`${baseURI}/`, {
             method: "GET",
@@ -41,10 +41,11 @@ export const getChats = async (req, res) => {
 
 }
 
-export const getMessages = async (req, res) => {
+export const getMessages = async (chatId) => {
     try {
-        const res = await fetch(`${baseURI}/messages/${chatID}`, {
+        const res = await fetch(`${baseURI}/messages/${chatId}`, {
             method: "GET",
+            credentials: "include"
 
         })
         const response = await res.json()
@@ -55,7 +56,7 @@ export const getMessages = async (req, res) => {
     }
 }
 
-export const deleteChat = async (req, res) => {
+export const deleteChat = async () => {
     try {
         const res = await fetch(`${baseURI}/delete/${chatID}`, { method: "GET" })
         const response = await res.json()
