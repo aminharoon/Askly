@@ -8,10 +8,13 @@ import { useEffect } from "react"
 
 export const useChat = () => {
     const dispatch = useDispatch()
-    const { currentChatId } = useSelector((state) => state.chat)
 
-    const handleSendMessage = async ({ message, chatId = "" }) => {
+
+    const handleSendMessage = async ({ message, chatId }) => {
+
+
         try {
+            setChatIdToLocalStorage(chatId)
             dispatch(setIsLoading(true))
 
             const data = await sendMessage({ message, chatId })
@@ -68,6 +71,8 @@ export const useChat = () => {
                 return acc
             }, {})))
 
+
+
         } catch (e) {
             dispatch(setIsLoading(false))
             dispatch(setError(`something went wrong while sending message ${e.message}`))
@@ -81,7 +86,7 @@ export const useChat = () => {
 
     const handleGetMessages = async (chatId, chats) => {
         try {
-
+            setChatIdToLocalStorage(chatId)
             dispatch(setIsLoading(true))
 
             const data = await getMessages(chatId)
@@ -104,9 +109,7 @@ export const useChat = () => {
         }
 
     }
-    useEffect(() => {
-        handleGetMessages(currentChatId)
-    }, [])
+
 
     const handleDeleteChat = async (chatId) => {
         try {
@@ -122,14 +125,21 @@ export const useChat = () => {
         }
     }
 
-    const handleSetLastChatId = async () => {
+    const setChatIdToLocalStorage = (chatId) => {
 
+        localStorage.setItem("currentChatId", JSON.stringify(chatId))
+    }
+
+    const getLocalChatId = () => {
+        return JSON.parse(localStorage.getItem("currentChatId"));
     }
 
 
 
 
+
+
     return {
-        initializeSocketConnection, handleSendMessage, handleGetChats, handleGetMessages, handleDeleteChat, handleSetLastChatId
+        initializeSocketConnection, handleSendMessage, handleGetChats, handleGetMessages, handleDeleteChat, setChatIdToLocalStorage, getLocalChatId
     }
 }

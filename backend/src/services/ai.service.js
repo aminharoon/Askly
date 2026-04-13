@@ -1,5 +1,5 @@
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
-import { ChatMistralAI } from "@langchain/mistralai";
+import { ChatMistralAI, MistralAI } from "@langchain/mistralai";
 import { HumanMessage, SystemMessage, tool, createAgent, AIMessage } from 'langchain'
 import { sendEmail } from "./mail.service.js";
 import * as z from 'zod'
@@ -46,7 +46,7 @@ const mistralModel = new ChatMistralAI({
 });
 
 const agent = createAgent({
-    model: geminiModel,
+    model: mistralModel,
     tools: [searchInterNetTool, emailTool]
 })
 

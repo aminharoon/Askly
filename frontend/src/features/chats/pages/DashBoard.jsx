@@ -23,11 +23,15 @@ const DashBoard = () => {
 
     chat.handleSendMessage({ message: trimmedMessage, chatId: currentChatId });
     setUserMessage("");
+    console.log(currentChatId);
   };
 
   useEffect(() => {
     chat.initializeSocketConnection();
     chat.handleGetChats();
+
+    const localChatId = chat.getLocalChatId();
+    chat.handleGetMessages(localChatId, chats);
   }, []);
 
   const handleOpenChats = (chatId) => {
@@ -72,7 +76,7 @@ const DashBoard = () => {
                   onClick={() => handleDeleteChat(chat.id)}
                   className="absolute right-2 cursor-pointer  "
                 >
-                  <i class="ri-close-large-line"></i>
+                  <i className="ri-close-large-line"></i>
                 </button>
               </div>
             ))}
@@ -83,7 +87,7 @@ const DashBoard = () => {
               className="cursor-pointer w-full rounded-xl bg-white/5 hover:bg-white/7 px-3 py-3 relative flex"
             >
               logout
-              <i class="ri-logout-box-r-line absolute right-2 text-2xl"></i>
+              <i className="ri-logout-box-r-line absolute right-2 text-2xl"></i>
             </button>
           </div>
         </aside>

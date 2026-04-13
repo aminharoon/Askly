@@ -64,7 +64,8 @@ const registerUser = async (req, res) => {
         subject: "EMAIL VERIFICATION LINK ! 🚀",
         html: html
     })
-    return res.status(201).json(new ApiResponse(201, "userCreated successfully", user))
+    const fetchedUser = await userModel.findOne({ email }).select("-password -refreshToken -emailToken")
+    return res.status(201).json(new ApiResponse(201, "userCreated successfully", fetchedUser))
 
 
 }
