@@ -56,9 +56,9 @@ export const getMessages = async (chatId) => {
     }
 }
 
-export const deleteChat = async () => {
+export const deleteChat = async (chatId) => {
     try {
-        const res = await fetch(`${baseURI}/delete/${chatID}`, { method: "GET" })
+        const res = await fetch(`${baseURI}/delete/${chatId}`, { method: "GET", credentials: "include" })
         const response = await res.json()
         return response
     } catch (e) {

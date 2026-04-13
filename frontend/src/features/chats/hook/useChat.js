@@ -1,14 +1,16 @@
 
 import { initializeSocketConnection } from "../services/chat.socket"
-import { sendMessage, getChats, getMessages } from "../services/chat.api"
-import { useDispatch } from "react-redux"
-import { setChats, setCurrentChatId, setIsLoading, setError, createNewChat, addNewMessage, addMessages } from "../chat.slice"
+import { sendMessage, getChats, getMessages, deleteChat } from "../services/chat.api"
+import { useDispatch, useSelector } from "react-redux"
+import { setChats, setCurrentChatId, setIsLoading, setError, createNewChat, addNewMessage, addMessages, removeChat } from "../chat.slice"
+import { useEffect } from "react"
 
 
 export const useChat = () => {
     const dispatch = useDispatch()
+    const { currentChatId } = useSelector((state) => state.chat)
 
-    const handleSendMessage = async ({ message, chatId }) => {
+    const handleSendMessage = async ({ message, chatId = "" }) => {
         try {
             dispatch(setIsLoading(true))
 
@@ -26,7 +28,7 @@ export const useChat = () => {
             dispatch(addNewMessage({
                 chatId: resolvedChatId,
                 content: message,
-                role: "user"
+                role: chat.role
             }))
 
             dispatch(addNewMessage({
@@ -77,12 +79,13 @@ export const useChat = () => {
 
     }
 
-    const handleGetMessages = async (chatId) => {
+    const handleGetMessages = async (chatId, chats) => {
         try {
+
             dispatch(setIsLoading(true))
+
             const data = await getMessages(chatId)
             const { messages } = data
-            console.log(messages)
 
             const formattedMessages = messages.map(msg => ({
                 content: msg.content,
@@ -96,15 +99,37 @@ export const useChat = () => {
 
         } catch (e) {
             dispatch(setError(`something went wrong while fetching messages ${e.message}`))
+        } finally {
             dispatch(setIsLoading(false))
         }
+
+    }
+    useEffect(() => {
+        handleGetMessages(currentChatId)
+    }, [])
+
+    const handleDeleteChat = async (chatId) => {
+        try {
+            dispatch(setIsLoading(true))
+            await deleteChat(chatId)
+            dispatch(removeChat({ chatId }))
+
+        } catch (e) {
+            dispatch(setError(`something went wrong while deleting the chat ${e.message}`))
+        } finally {
+            dispatch(setIsLoading(false))
+
+        }
+    }
+
+    const handleSetLastChatId = async () => {
+
     }
 
 
 
 
-
     return {
-        initializeSocketConnection, handleSendMessage, handleGetChats, handleGetMessages
+        initializeSocketConnection, handleSendMessage, handleGetChats, handleGetMessages, handleDeleteChat, handleSetLastChatId
     }
 }

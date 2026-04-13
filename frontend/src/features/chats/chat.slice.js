@@ -61,12 +61,29 @@ const chatSlice = createSlice({
         },
         addMessages: (state, action) => {
             const { chatId, messages } = action.payload
-            state.chats[chatId].message.push(...messages)
+            const existingMessages = state.chats[chatId].message;
+
+            // create set of existing IDs
+            const existingIds = new Set(existingMessages.map(m => m._id));
+
+            // filter incoming messages
+            const uniqueMessages = messages.filter(m => !existingIds.has(m._id));
+
+            // push only unique ones
+            state.chats[chatId].message.push(...uniqueMessages);
+        },
+        removeChat: (state, action) => {
+            const { chatId } = action.payload
+            delete state.chats[chatId]
+
+            if (state.currentChatId === chatId) {
+                state.currentChatId = null
+            }
         }
     }
 })
 
 
-export const { setChats, setCurrentChatId, setIsLoading, setError, createNewChat, addNewMessage, addMessages } = chatSlice.actions
+export const { setChats, setCurrentChatId, setIsLoading, setError, createNewChat, addNewMessage, addMessages, removeChat } = chatSlice.actions
 
 export default chatSlice.reducer
