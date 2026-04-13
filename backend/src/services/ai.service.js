@@ -46,7 +46,7 @@ const mistralModel = new ChatMistralAI({
 });
 
 const agent = createAgent({
-    model: mistralModel,
+    model: geminiModel,
     tools: [searchInterNetTool, emailTool]
 })
 
