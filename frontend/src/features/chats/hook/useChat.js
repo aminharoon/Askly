@@ -116,6 +116,7 @@ export const useChat = () => {
             dispatch(setIsLoading(true))
             await deleteChat(chatId)
             dispatch(removeChat({ chatId }))
+            localStorage.removeItem("currentChatId")
 
         } catch (e) {
             dispatch(setError(`something went wrong while deleting the chat ${e.message}`))
