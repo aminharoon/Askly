@@ -14,6 +14,7 @@ const DashBoard = () => {
   const [send, setIsSend] = useState(false);
 
   const { chats, currentChatId } = useSelector((state) => state.chat);
+  const { user } = useSelector((state) => state.auth);
   const chatList = Object.values(chats);
   const chat = useChat();
   const auth = useAuth();
@@ -59,8 +60,8 @@ const DashBoard = () => {
   };
 
   return (
-    <main className=" min-h-screen w-full h-[100vh] w-[100vw] bg-[#111111] p-3 text-white md:p-5">
-      <section className="mx-auto flex h-[calc(100vh-1.5rem)] w-[90%] gap-4 rounded-3xl p-1 md:h-[calc(100vh-2.5rem)] md:gap-6">
+    <main className="   bg-[#111111]  text-white p-6 h-[100%] w-[100%]">
+      <section className="relative mx-auto flex  gap-4 rounded-3xl  md:h-[calc(100vh-2.5rem)] md:gap-6 justify-center items-center ">
         {/* Sidebar */}
         <aside className="hidden h-full w-[20%] shrink-0 rounded-3xl bg-[#1a1a1a6c] p-4 md:flex md:flex-col">
           {/* <h1 className="mb-4 text-3xl font-semibold tracking-tight">
@@ -109,17 +110,23 @@ const DashBoard = () => {
         </aside>
 
         {/* Main Chat Area */}
-        <section className="relative flex h-full w-[80%] flex-col gap-4 px-6">
+        <section className=" flex h-[90%] w-[80%] flex-col gap-2  ">
           {/* Messages */}
 
-          <div className="no-scrollbar flex-1 overflow-y-auto pb-28 flex flex-col gap-3 relative">
+          <div className="no-scrollbar flex-1 overflow-y-auto pb-28 flex flex-col gap-3 relative w-[100%]   ">
             {currentChatId == null ? (
-              <div className="flex flex-1 items-center justify-center">
+              <div className="flex flex-1 items-center justify-center flex-col">
                 <img
                   className="h-[300px] animate-float"
                   src="/images/kindpng_2192155.png"
                   alt="this is png image "
                 />
+                <p className="text-2xl  ">
+                  Back at it,{" "}
+                  <span className="  text-[#D57C3A] capitalize">
+                    {user.username}
+                  </span>
+                </p>
               </div>
             ) : (
               chats[currentChatId]?.message.map((msg, index) => (
@@ -145,7 +152,7 @@ const DashBoard = () => {
             )}
           </div>
 
-          <footer className="rounded-3xl w-full absolute bottom-2 bg-[#1a1a1a]  border border-[#D57C3A]   p-2 md:p-3">
+          <footer className="rounded-3xl w-[78%] absolute bottom-2 bg-[#1a1a1a]  border border-[#D57C3A]   py-2 md:p-3">
             <form
               onSubmit={handleSubmitMessage}
               className="flex flex-col gap-3 md:flex-row"
@@ -155,7 +162,7 @@ const DashBoard = () => {
                 type="text"
                 value={userMessage}
                 onChange={(event) => setUserMessage(event.target.value)}
-                placeholder="Type your message..."
+                placeholder="How can i help you today!"
                 className="w-full rounded-2xl  px-4 py-3 text-lg  text-white outline-none transition placeholder:text-white/45 focus:border-white/90"
               />
               <button

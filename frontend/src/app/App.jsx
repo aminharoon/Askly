@@ -11,7 +11,11 @@ const App = () => {
     auth.handleGetMe();
   }, []);
 
-  return <RouterProvider router={router} />;
+  return (
+    <div className="h-screen w-screen bg-[#111111] flex justify-center items-center">
+      <RouterProvider router={router} />
+    </div>
+  );
 };
 
 export default App;

@@ -111,8 +111,7 @@ const Register = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2 px-4 bg-accent text-black font-semibold rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed mt-6 flex items-center justify-center gap-2"
-              style={{ backgroundColor: "#3b82f6" }}
+              className="w-full py-2 px-4 bg-accent text-black font-semibold rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed mt-6 flex items-center justify-center gap-2 bg-[#D57C3A] hover:bg-[#C86F32]"
             >
               {loading && (
                 <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
@@ -126,8 +125,7 @@ const Register = () => {
             <button
               type="button"
               onClick={() => navigate("/login")}
-              className="font-semibold bg-none border-none cursor-pointer"
-              style={{ color: "#3b82f6" }}
+              className="font-semibold bg-none border-none cursor-pointer text-[#D57C3A]"
             >
               Login
             </button>
