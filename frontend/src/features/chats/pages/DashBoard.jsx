@@ -63,9 +63,6 @@ const DashBoard = () => {
       <section className="relative mx-auto flex  gap-4 rounded-3xl  md:h-[calc(100vh-2.5rem)] md:gap-6 justify-center items-center ">
         {/* Sidebar */}
         <aside className="hidden h-full w-[20%] shrink-0 rounded-3xl bg-[#1a1a1a6c] p-4 md:flex md:flex-col">
-          {/* <h1 className="mb-4 text-3xl font-semibold tracking-tight">
-            Perplexity
-          </h1> */}
           <div className="w-full relative ">
             <button
               onClick={() => handleSendNewMessage()}
