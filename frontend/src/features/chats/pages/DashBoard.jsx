@@ -1,35 +1,39 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useChat } from "../hook/useChat";
 import { useAuth } from "../../auth/hook/useauth";
-import { useNavigate } from "react-router";
+import { Route, useNavigate } from "react-router";
+import { addNewMessage, setCurrentChatId } from "../chat.slice.js";
 
 const DashBoard = () => {
+  const dispatch = useDispatch();
   const [userMessage, setUserMessage] = useState("");
+  const [send, setIsSend] = useState(false);
 
   const { chats, currentChatId } = useSelector((state) => state.chat);
   const chatList = Object.values(chats);
   const chat = useChat();
   const auth = useAuth();
   const navigate = useNavigate();
-
+  const inputRef = useRef();
   const handleSubmitMessage = (e) => {
     e.preventDefault();
     const trimmedMessage = userMessage.trim();
     if (!trimmedMessage) return null;
+    console.log(chats);
 
     chat.handleSendMessage({ message: trimmedMessage, chatId: currentChatId });
     setUserMessage("");
-    console.log(currentChatId);
+    setIsSend((pre) => !pre);
   };
 
   useEffect(() => {
+    inputRef.current.focus();
     chat.initializeSocketConnection();
     chat.handleGetChats();
-
     const localChatId = chat.getLocalChatId();
     chat.handleGetMessages(localChatId, chats);
   }, []);
@@ -45,16 +49,28 @@ const DashBoard = () => {
     navigate("/login");
   };
 
+  const handleSendNewMessage = (e) => {
+    dispatch(setCurrentChatId(null));
+    localStorage.removeItem("currentChatId");
+    setUserMessage("");
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  };
+
   return (
     <main className=" min-h-screen w-full h-[100vh] w-[100vw] bg-[#111111] p-3 text-white md:p-5">
       <section className="mx-auto flex h-[calc(100vh-1.5rem)] w-[90%] gap-4 rounded-3xl p-1 md:h-[calc(100vh-2.5rem)] md:gap-6">
         {/* Sidebar */}
-        <aside className="hidden h-full w-[20%] shrink-0 rounded-3xl bg-[#1a1a1a] p-4 md:flex md:flex-col">
+        <aside className="hidden h-full w-[20%] shrink-0 rounded-3xl bg-[#1a1a1a6c] p-4 md:flex md:flex-col">
           {/* <h1 className="mb-4 text-3xl font-semibold tracking-tight">
             Perplexity
           </h1> */}
           <div className="w-full relative ">
-            <button className="cursor-pointer w-full rounded-xl bg-white/8 hover:bg-white/7 px-3 py-3 relative flex">
+            <button
+              onClick={() => handleSendNewMessage()}
+              className="cursor-pointer w-full rounded-xl bg-[#d57d3aae] hover:bg-[#C86F32] px-3 py-3 relative flex"
+            >
               New chat
               <i className="ri-arrow-right-fill absolute right-2 text-2xl"></i>
             </button>
@@ -64,7 +80,7 @@ const DashBoard = () => {
             {chatList.map((chat) => (
               <div
                 key={chat.id ?? chat._id}
-                className="rounded-xl bg-white/5 hover:bg-white/7 px-3 py-3 relative flex"
+                className="rounded-xl bg-[#d57d3a9d] hover:bg-[#C86F32] px-3 py-3 relative flex"
               >
                 <button
                   onClick={() => handleOpenChats(chat.id)}
@@ -84,7 +100,7 @@ const DashBoard = () => {
           <div className="relative w-full">
             <button
               onClick={() => handleLogoutUser()}
-              className="cursor-pointer w-full rounded-xl bg-white/5 hover:bg-white/7 px-3 py-3 relative flex"
+              className="cursor-pointer w-full rounded-xl bg-[rgba(213,125,58,0.71)] hover:bg-[#C86F32] px-3 py-3 relative flex"
             >
               logout
               <i className="ri-logout-box-r-line absolute right-2 text-2xl"></i>
@@ -95,32 +111,47 @@ const DashBoard = () => {
         {/* Main Chat Area */}
         <section className="relative flex h-full w-[80%] flex-col gap-4 px-6">
           {/* Messages */}
+
           <div className="no-scrollbar flex-1 overflow-y-auto pb-28 flex flex-col gap-3 relative">
-            {chats[currentChatId]?.message.map((msg, index) => (
-              <div
-                key={msg._id ?? `${msg.role ?? "msg"}-${index}`}
-                className="w-full flex"
-              >
-                {msg.role === "user" || !msg.role ? (
-                  <div className="ml-auto max-w-[70%] rounded-2xl rounded-br-none bg-[#2a2a2a] px-4 py-3 text-white break-words whitespace-pre-wrap">
-                    {msg.content}
-                  </div>
-                ) : (
-                  <div className="mr-auto max-w-[80%] rounded-2xl  px-4 py-3 text-white/70 break-words leading-relaxed">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                      {msg.content ?? ""}
-                    </ReactMarkdown>
-                  </div>
-                )}
+            {currentChatId == null ? (
+              <div className="flex flex-1 items-center justify-center">
+                <img
+                  className="h-[300px] animate-float"
+                  src="/images/kindpng_2192155.png"
+                  alt="this is png image "
+                />
               </div>
-            ))}
+            ) : (
+              chats[currentChatId]?.message.map((msg, index) => (
+                <div
+                  key={msg._id ?? `${msg.role ?? "msg"}-${index}`}
+                  className="w-full flex"
+                >
+                  {(msg.role ?? "user") === "user" ? (
+                    <div
+                      className={`ml-auto max-w-[70%] rounded-2xl rounded-br-none bg-[#D57C3A] px-4 py-3 text-white break-words whitespace-pre-wrap `}
+                    >
+                      {msg.content}
+                    </div>
+                  ) : (
+                    <div className="mr-auto max-w-[80%] rounded-2xl  px-4 py-3 text-white/70 break-words leading-relaxed">
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        {msg.content ?? ""}
+                      </ReactMarkdown>
+                    </div>
+                  )}
+                </div>
+              ))
+            )}
           </div>
-          <footer className="rounded-3xl w-full absolute bottom-2 border  bg-[#1a1a1a]  border-white/60  p-2 md:p-3">
+
+          <footer className="rounded-3xl w-full absolute bottom-2 bg-[#1a1a1a]  border border-[#D57C3A]   p-2 md:p-3">
             <form
               onSubmit={handleSubmitMessage}
               className="flex flex-col gap-3 md:flex-row"
             >
               <input
+                ref={inputRef}
                 type="text"
                 value={userMessage}
                 onChange={(event) => setUserMessage(event.target.value)}
@@ -130,9 +161,9 @@ const DashBoard = () => {
               <button
                 type="submit"
                 disabled={!userMessage.trim()}
-                className="rounded-2xl border border-white/60 px-6 py-3 text-lg font-semibold text-white transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
+                className={`rounded-2xl bg-[#D57C3A] hover:bg-[#C86F32] px-6 py-3 text-lg font-semibold text-white transition  disabled:opacity-60 `}
               >
-                Send
+                <i className="ri-send-ins-fill text-3xl"></i>
               </button>
             </form>
           </footer>

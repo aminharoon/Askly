@@ -14,6 +14,7 @@ export const useChat = () => {
 
 
         try {
+
             setChatIdToLocalStorage(chatId)
             dispatch(setIsLoading(true))
 
@@ -26,13 +27,14 @@ export const useChat = () => {
                     chatId: chat._id,
                     title: chat.tittle ?? chat.title ?? message
                 }))
-            }
 
+            }
             dispatch(addNewMessage({
                 chatId: resolvedChatId,
                 content: message,
                 role: chat.role
             }))
+
 
             dispatch(addNewMessage({
                 chatId: resolvedChatId,
