@@ -11,24 +11,23 @@ import { addNewMessage, setCurrentChatId } from "../chat.slice.js";
 const DashBoard = () => {
   const dispatch = useDispatch();
   const [userMessage, setUserMessage] = useState("");
-  const [send, setIsSend] = useState(false);
 
-  const { chats, currentChatId } = useSelector((state) => state.chat);
+  const { chats, currentChatId, Loading } = useSelector((state) => state.chat);
   const { user } = useSelector((state) => state.auth);
   const chatList = Object.values(chats);
   const chat = useChat();
   const auth = useAuth();
   const navigate = useNavigate();
   const inputRef = useRef();
+
   const handleSubmitMessage = (e) => {
     e.preventDefault();
     const trimmedMessage = userMessage.trim();
     if (!trimmedMessage) return null;
-    console.log(chats);
 
     chat.handleSendMessage({ message: trimmedMessage, chatId: currentChatId });
+
     setUserMessage("");
-    setIsSend((pre) => !pre);
   };
 
   useEffect(() => {
@@ -97,6 +96,9 @@ const DashBoard = () => {
                 </button>
               </div>
             ))}
+            {Loading && (
+              <div className="rounded-xl skeleton-shimmer px-3 relative flex py-6 overflow-hidden"></div>
+            )}
           </div>
           <div className="relative w-full">
             <button
@@ -149,6 +151,13 @@ const DashBoard = () => {
                   )}
                 </div>
               ))
+            )}
+            {Loading && (
+              <div className="w-full flex">
+                <div
+                  className={`ml-auto max-w-[70%] rounded-2xl rounded-br-none bg-[#D57C3A] px-4 py-3 text-white break-words whitespace-pre-wrap skeleton-shimmer `}
+                ></div>
+              </div>
             )}
           </div>
 
