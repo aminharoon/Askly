@@ -4,23 +4,9 @@ import { tavily } from "@tavily/core"
 const tavi = tavily(
     { apiKey: process.env.TAVALI_API }
 )
-// export const getLatestData = async ({ message }) => {
-//     console.log("🔍 Tool called with:", message)
-//     try {
-//         const response = await tavi.search(message, {
-//             maxResults: 5,
-//             searchDepth: "fast"
-//         })
 
-
-//         return JSON.stringify(response)
-//     } catch (e) {
-//         console.log(`something went wrong white getting the real time data ${e.message}`)
-
-//     }
-// }
 export const getLatestData = async ({ message }) => {
-
+    console.log("this tool has been called ")
     try {
         const response = await tavi.search(message, {
             maxResults: 5,

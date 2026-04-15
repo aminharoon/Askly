@@ -58,7 +58,7 @@ export const useChat = () => {
 
     const handleGetChats = async () => {
         try {
-            dispatch(setIsLoading(true))
+
             const data = await getChats()
             const { chats } = data
 
@@ -76,12 +76,10 @@ export const useChat = () => {
 
 
         } catch (e) {
-            dispatch(setIsLoading(false))
+
             dispatch(setError(`something went wrong while sending message ${e.message}`))
             console.log(`something went wrong while sending message ${e.message}`)
 
-        } finally {
-            dispatch(setIsLoading(false))
         }
 
     }
@@ -89,7 +87,7 @@ export const useChat = () => {
     const handleGetMessages = async (chatId, chats) => {
         try {
             setChatIdToLocalStorage(chatId)
-            dispatch(setIsLoading(true))
+
 
             const data = await getMessages(chatId)
             const { messages } = data
@@ -106,8 +104,6 @@ export const useChat = () => {
 
         } catch (e) {
             dispatch(setError(`something went wrong while fetching messages ${e.message}`))
-        } finally {
-            dispatch(setIsLoading(false))
         }
 
     }
