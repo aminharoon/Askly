@@ -1,6 +1,6 @@
 
 import { initializeSocketConnection } from "../services/chat.socket"
-import { sendMessage, getChats, getMessages, deleteChat } from "../services/chat.api"
+import { sendMessage, getChats, getMessages, deleteChat, getPdf } from "../services/chat.api"
 import { useDispatch, useSelector } from "react-redux"
 import { setChats, setCurrentChatId, setIsLoading, setError, createNewChat, addNewMessage, addMessages, removeChat } from "../chat.slice"
 import { useEffect } from "react"
@@ -132,13 +132,36 @@ export const useChat = () => {
     const getLocalChatId = () => {
         return JSON.parse(localStorage.getItem("currentChatId"));
     }
+    const handleExportAsPdf = async (markDownText) => {
+        const trimmedText = (markDownText || "").trim()
+        if (!trimmedText) {
+            dispatch(setError("nothing to export"))
+            return
+        }
 
+        try {
+            const pdfBlob = await getPdf(trimmedText)
+            if (!pdfBlob) return
+
+            const url = window.URL.createObjectURL(pdfBlob)
+            const link = document.createElement("a")
+            link.href = url
+
+            link.download = `response - ${Date.now()}.pdf`
+            document.body.appendChild(link)
+            link.click()
+            link.remove()
+            window.URL.revokeObjectURL(url)
+        } catch (e) {
+            dispatch(setError(`something went wrong while downloading the pdf ${e.message}`))
+        }
+    }
 
 
 
 
 
     return {
-        initializeSocketConnection, handleSendMessage, handleGetChats, handleGetMessages, handleDeleteChat, setChatIdToLocalStorage, getLocalChatId
+        initializeSocketConnection, handleSendMessage, handleGetChats, handleGetMessages, handleDeleteChat, setChatIdToLocalStorage, getLocalChatId, handleExportAsPdf
     }
 }

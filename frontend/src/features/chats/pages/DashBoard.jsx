@@ -58,6 +58,10 @@ const DashBoard = () => {
     }
   };
 
+  const handleDownload = (markDownText) => {
+    chat.handleExportAsPdf(markDownText);
+  };
+
   return (
     <main className="   bg-[#111111]  text-white p-6 h-[100%] w-[100%]">
       <section className="relative mx-auto flex  gap-4 rounded-3xl  md:h-[calc(100vh-2.5rem)] md:gap-6 justify-center items-center ">
@@ -144,6 +148,12 @@ const DashBoard = () => {
                       <ReactMarkdown remarkPlugins={[remarkGfm]}>
                         {msg.content ?? ""}
                       </ReactMarkdown>
+                      <button
+                        onClick={() => handleDownload(msg.content)}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                      >
+                        Export PDF
+                      </button>
                     </div>
                   )}
                 </div>

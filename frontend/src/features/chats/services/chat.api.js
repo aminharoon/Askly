@@ -66,3 +66,27 @@ export const deleteChat = async (chatId) => {
 
     }
 }
+
+export const getPdf = async (markdownText) => {
+    try {
+
+        const res = await fetch(`${baseURI}/export-as-pdf`, {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ content: markdownText })
+
+        })
+        if (!res.ok) {
+            const err = await res.json().catch(() => { })
+            throw new Error(err.message || `something went wrong ${res.status}`)
+        }
+        const response = await res.blob()
+
+        return response
+
+    } catch (e) {
+        console.log(`something went wrong while downloading the pdf ${e.message}`)
+        throw new Error(`something went wrong while downloading the pdf ${e.message}`)
+    }
+}
