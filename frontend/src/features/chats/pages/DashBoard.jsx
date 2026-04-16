@@ -150,8 +150,10 @@ const DashBoard = () => {
                       </ReactMarkdown>
                       <button
                         onClick={() => handleDownload(msg.content)}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                        // hover:bg-[#C86F32] bg-[#D57C3A]
+                        className="mt-2 px-4 py-2   text-white rounded-lg transition cursor-pointer"
                       >
+                        <i className="ri-export-fill"></i>
                         Export PDF
                       </button>
                     </div>
