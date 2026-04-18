@@ -6,7 +6,7 @@ const tavi = tavily(
 )
 
 export const getLatestData = async ({ message }) => {
-    console.log("this tool has been called ")
+
     try {
         const response = await tavi.search(message, {
             maxResults: 5,
